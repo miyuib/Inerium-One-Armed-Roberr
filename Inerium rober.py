@@ -2,6 +2,7 @@ import dearpygui.dearpygui as dpg
 import os
 import json
 import time
+import webbrowser  # Добавлено для открытия URL
 
 CONFIG_DIR = os.path.join(os.path.expanduser("~"), "Documents", "inerium")
 if not os.path.exists(CONFIG_DIR):
@@ -24,7 +25,9 @@ def save_config(filename):
         "esp_vzlomitem": dpg.get_value("esp_vzlomitem"),
         "esp_player": dpg.get_value("esp_player"),
         "color": dpg.get_value("color"),
-        "unlock_skills": dpg.get_value("unlock_skills")
+        "unlock_skills": dpg.get_value("unlock_skills"),
+        "x2_cash": dpg.get_value("x2_cash"),
+        "easy_level": dpg.get_value("easy_level")
     }
     try:
         with open(os.path.join(CONFIG_DIR, filename), 'w') as file:
@@ -63,9 +66,10 @@ def delete_config(filename):
 
 def setup_gui():
     dpg.create_context()
-    dpg.create_viewport(title='Game Cheat Menu', width=800, height=600, resizable=False)
+    dpg.create_viewport(title='INERIUM | One-Armed-Robber', width=800, height=600, resizable=False)
     dpg.setup_dearpygui()
 
+    # Set red theme
     with dpg.handler_registry():
         dpg.add_key_down_handler(key=dpg.mvKey_Insert, callback=lambda s, a: toggle_viewport())
 
@@ -101,7 +105,9 @@ def setup_gui():
                 dpg.add_checkbox(label="Unlock Skills", tag="unlock_skills")
                 dpg.add_button(label="Give 1,000,000$", callback=lambda: print("Give 1,000,000$ activated"))
                 dpg.add_button(label="Give 10,000,000$", callback=lambda: print("Give 10,000,000$ activated"))
-                dpg.add_button(label="github(nowork)", callback=lambda: print("Donate activated"))
+                dpg.add_button(label="x2 Cash", tag="x2_cash", callback=lambda: print("x2 Cash activated"))
+                dpg.add_button(label="Easy Level", tag="easy_level", callback=lambda: print("Easy Level activated"))
+                dpg.add_button(label="github(nowork)", callback=lambda: webbrowser.open("https://github.com/miyuib/Inerium-One-Armed-Roberr"))
 
             with dpg.tab(label="Config"):
                 dpg.add_input_text(label="Config Name", tag="config_name", default_value="config.json")
@@ -111,7 +117,12 @@ def setup_gui():
                 dpg.add_listbox(label="Config List", items=list_configs(), tag="config_list")
                 dpg.add_button(label="Delete Config", callback=lambda: delete_config(dpg.get_value("config_list")))
 
-    dpg.show_viewport()
+            with dpg.tab(label="Update"):
+                dpg.add_text("1.0.1 Updates:")
+                dpg.add_text("- Menu style updated")
+                dpg.add_text("- New function: x2 Cash, Easy Level")
+                dpg.add_text("- Bug fixes")
+                dpg.show_viewport()
 
     try:
         while True:
@@ -129,4 +140,3 @@ def toggle_viewport():
 
 if __name__ == "__main__":
     setup_gui()
-
